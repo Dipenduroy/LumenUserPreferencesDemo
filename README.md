@@ -22,9 +22,5 @@ Set service basic auth credentials
 
 php -S localhost:8000 -t public
 
-## Import Postman collection
-
-Configure host and port in the endpoints
-
 
 

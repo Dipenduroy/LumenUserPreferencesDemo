@@ -1,25 +1,34 @@
-# Lumen PHP Framework
+# LumenUserPreferencesDemo 
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
-
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+Demo of User preferences Micro service in Lumen
 
 ## Official Documentation
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+Documentation for the Micro service Api gateway can be found on the [LumenApiGateway](https://github.com/Dipenduroy/LumenApiGateway).
 
-## Contributing
+## Composer
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+composer install
 
-## Security Vulnerabilities
+## Copy .env
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+cp .env.example .env
 
-## License
+## Configure .env
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# LumenUserPreferencesDemo
+Set service basic auth credentials
+
+## Migrate db
+
+php artisan migrate
+
+## Run LumenApiGateway
+
+php -S localhost:8000 -t public
+
+## Import Postman collection
+
+Configure host and port in the endpoints
+
+
+

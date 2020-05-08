@@ -18,7 +18,7 @@ cp .env.example .env
 
 Set service basic auth credentials
 
-## Run LumenApiGateway
+## Run Service
 
 php -S localhost:8000 -t public
 

@@ -43,7 +43,7 @@ class UserpreferencesController extends Controller {
         $user_id = $request->input('id');
         $user_preference = $request->input('user_preference');
         $value = json_decode(Cache::get($user_id), 1);
-        if(!in_array($user_preference,$value)) {
+        if(empty($value) || !in_array($user_preference,$value)) {
             $value[] = $user_preference;
             Cache::forever($user_id, json_encode($value));
         }        

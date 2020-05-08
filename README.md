@@ -18,10 +18,6 @@ cp .env.example .env
 
 Set service basic auth credentials
 
-## Migrate db
-
-php artisan migrate
-
 ## Run LumenApiGateway
 
 php -S localhost:8000 -t public

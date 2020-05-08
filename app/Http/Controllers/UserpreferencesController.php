@@ -23,9 +23,9 @@ class UserpreferencesController extends Controller {
      */
     public function index(Request $request) {
         $this->validate($request, [
-            'id' => 'required',
+            'user_id' => 'required',
         ]);
-        $user_id = $request->input('id');
+        $user_id = $request->input('user_id');
         $value = Cache::has($user_id)?json_decode(Cache::get($user_id),1):[];
         return response()->json($value);
     }
@@ -37,13 +37,13 @@ class UserpreferencesController extends Controller {
      */
     public function store(Request $request) {
         $this->validate($request, [
-            'id' => 'required',
+            'user_id' => 'required',
             'user_preference' => 'required'
         ]);
-        $user_id = $request->input('id');
+        $user_id = $request->input('user_id');
         $user_preference = $request->input('user_preference');
         $value = json_decode(Cache::get($user_id), 1);
-        if(!in_array($user_preference,$value)) {
+        if(empty($value) || !in_array($user_preference,$value)) {
             $value[] = $user_preference;
             Cache::forever($user_id, json_encode($value));
         }        
@@ -57,11 +57,11 @@ class UserpreferencesController extends Controller {
      */
     public function destroy(Request $request) {
         $this->validate($request, [
-            'id' => 'required',
+            'user_id' => 'required',
             'user_preference' => 'required',
             '_method'=>'required|in:DELETE'
         ]);
-        $user_id = $request->input('id');
+        $user_id = $request->input('user_id');
         $user_preference = $request->input('user_preference');
         if(!Cache::has($user_id)) {
             return response()->json([]);

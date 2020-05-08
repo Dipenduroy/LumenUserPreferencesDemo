@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\User;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Auth\GenericUser;
 
@@ -33,8 +31,8 @@ class AuthServiceProvider extends ServiceProvider
         // the User instance via an API token or any other method necessary.
 
         $this->app['auth']->viaRequest('api', function ($request) {
-            $AUTH_USER = getenv('SERVICE_USERNAME');
-            $AUTH_PASS = getenv('SERVICE_PASSWORD');
+            $AUTH_USER = env('SERVICE_USERNAME');
+            $AUTH_PASS = env('SERVICE_PASSWORD');
             header('Cache-Control: no-cache, must-revalidate, max-age=0');
             $has_supplied_credentials = !(empty($_SERVER['PHP_AUTH_USER']) && empty($_SERVER['PHP_AUTH_PW']));
             $is_not_authenticated = (

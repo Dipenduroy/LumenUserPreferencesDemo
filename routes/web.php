@@ -15,13 +15,16 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 $router->group(['middleware' => 'auth','prefix'=>'api'], function () use ($router) {
-    $router->get('userpreferences', [
-        'as' => 'userpreferences', 'uses' => 'UserpreferencesController@index'
+    $router->get('user-preferences/user/{userid}', [
+        'as' => 'user-preferences', 'uses' => 'UserpreferencesController@index'
     ]);
-    $router->post('userpreferences', [
-        'as' => 'userpreferences', 'uses' => 'UserpreferencesController@store'
+    $router->post('user-preferences/user/{userid}', [
+        'as' => 'user-preferences', 'uses' => 'UserpreferencesController@store'
     ]);
-    $router->delete('userpreferences', [
-        'as' => 'userpreferences', 'uses' => 'UserpreferencesController@destroy'
+    $router->patch('user-preferences/user/{userid}/id/{id}', [
+        'as' => 'user-preferences', 'uses' => 'UserpreferencesController@update'
+    ]);
+    $router->delete('user-preferences/user/{userid}/id/{id}', [
+        'as' => 'user-preferences', 'uses' => 'UserpreferencesController@destroy'
     ]);
 });

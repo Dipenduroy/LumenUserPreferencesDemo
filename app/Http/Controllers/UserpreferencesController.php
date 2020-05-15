@@ -21,12 +21,8 @@ class UserpreferencesController extends Controller {
      *
      * @return Response
      */
-    public function index(Request $request) {
-        $this->validate($request, [
-            'user_id' => 'required',
-        ]);
-        $user_id = $request->input('user_id');
-        $value = Cache::has($user_id)?json_decode(Cache::get($user_id),1):[];
+    public function index($userid) {
+        $value = Cache::has($userid)?json_decode(Cache::get($userid),1):[];
         return response()->json($value);
     }
 
@@ -35,19 +31,19 @@ class UserpreferencesController extends Controller {
      *
      * @return Response
      */
-    public function store(Request $request) {
+    public function store(Request $request,$userid) {
         $this->validate($request, [
-            'user_id' => 'required',
             'user_preference' => 'required'
         ]);
-        $user_id = $request->input('user_id');
         $user_preference = $request->input('user_preference');
-        $value = json_decode(Cache::get($user_id), 1);
-        if(empty($value) || !in_array($user_preference,$value)) {
-            $value[] = $user_preference;
-            Cache::forever($user_id, json_encode($value));
-        }        
-        return response()->json($value);
+        $value = json_decode(Cache::get($userid), 1);
+        $id=1;
+        if(!empty($value)) {
+            $id=max(array_column($value, 'id'))+1;
+        }
+        $value[] = ['id'=>$id,'name'=>$user_preference];
+        Cache::forever($userid, json_encode($value));     
+        return response()->json($value,201);
     }
     
     /**
@@ -55,24 +51,46 @@ class UserpreferencesController extends Controller {
      *
      * @return Response
      */
-    public function destroy(Request $request) {
-        $this->validate($request, [
-            'user_id' => 'required',
-            'user_preference' => 'required',
-            '_method'=>'required|in:DELETE'
-        ]);
-        $user_id = $request->input('user_id');
-        $user_preference = $request->input('user_preference');
-        if(!Cache::has($user_id)) {
-            return response()->json([]);
+    public function destroy($userid,$id) {
+        if(!Cache::has($userid)) {
+            return response()->json([],404);
         }
-        $value = json_decode(Cache::get($user_id), 1);
-        $find_key=array_search($user_preference,$value);
-        if($find_key!==false) {
-            unset($value[$find_key]);
-            Cache::forever($user_id, json_encode($value));
+        $value = json_decode(Cache::get($userid), 1);
+        $id_array=array_column($value, 'id');
+        if(in_array($id,$id_array)) {
+            $key = array_search($id, $id_array);
+            unset($value[$key]);
+            Cache::forever($userid, json_encode(array_values($value)));
+        } else {
+            return response()->json([],404);
         }        
-        return response()->json($value);
+        return response()->json([],204);
+    }
+    
+    /**
+     * Update a user's preference.
+     *
+     * @return Response
+     */
+    public function update(Request $request,$userid,$id) {
+        $this->validate($request, [
+            'user_preference' => 'required'
+        ]);
+        $user_preference = $request->input('user_preference');
+        if(!Cache::has($userid)) {
+            return response()->json([],404);
+        }
+        $value = json_decode(Cache::get($userid), 1);
+        $id_array=array_column($value, 'id');
+        if(in_array($id,$id_array)) {
+            $key = array_search($id, $id_array);
+            $value[$key]['name']=$user_preference;
+            $updated=array_values($value);
+            Cache::forever($userid, json_encode($updated));
+        } else {
+            return response()->json([],404);
+        }        
+        return response()->json($updated,200);
     }
 
 }

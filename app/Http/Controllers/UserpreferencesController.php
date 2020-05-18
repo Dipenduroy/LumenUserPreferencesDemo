@@ -40,6 +40,11 @@ class UserpreferencesController extends Controller {
         $id=1;
         if(!empty($value)) {
             $id=max(array_column($value, 'id'))+1;
+            $old_preferences=array_column($value, 'name');
+            if(in_array($user_preference,$old_preferences)) {
+                $validateResult['user_preference']=['The user preference field is already available.'];
+                return response()->json($validateResult,422);
+            }
         }
         $value[] = ['id'=>$id,'name'=>$user_preference];
         Cache::forever($userid, json_encode($value));     
@@ -63,8 +68,8 @@ class UserpreferencesController extends Controller {
             Cache::forever($userid, json_encode(array_values($value)));
         } else {
             return response()->json([],404);
-        }        
-        return response()->json([],204);
+        }
+        return response()->json(array_values($value),200);
     }
     
     /**
@@ -74,7 +79,7 @@ class UserpreferencesController extends Controller {
      */
     public function update(Request $request,$userid,$id) {
         $this->validate($request, [
-            'user_preference' => 'required'
+            'user_preference' => 'required|string'
         ]);
         $user_preference = $request->input('user_preference');
         if(!Cache::has($userid)) {
@@ -83,6 +88,11 @@ class UserpreferencesController extends Controller {
         $value = json_decode(Cache::get($userid), 1);
         $id_array=array_column($value, 'id');
         if(in_array($id,$id_array)) {
+            $old_preferences=array_column($value, 'name');
+            if(in_array($user_preference,$old_preferences)) {
+                $validateResult['user_preference']=['The user preference field is already available.'];
+                return response()->json($validateResult,422);
+            }
             $key = array_search($id, $id_array);
             $value[$key]['name']=$user_preference;
             $updated=array_values($value);

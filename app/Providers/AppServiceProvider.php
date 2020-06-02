@@ -13,6 +13,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(ZipkinTrace::class, function ($app) {
+            return new ZipkinTrace();
+        });
+        $this->app->singleton(Helper::class, function ($app) {
+            return new Helper($app->make(ZipkinTrace::class));
+        });
     }
 }
